@@ -31,17 +31,15 @@ export default function Screen() {
       {!submitted && (
         <div className="form-holder">
           <form>
-            <div className="form-group full">
+            <div className="form-group">
               <label htmlFor="last_name">Last Name</label>
               <input type="text" id="last_name" name="last_name" onChange={inputChange} value={student.last_name} />
             </div>
-
-            <div className="form-group full">
+            <div className="form-group">
               <label htmlFor="first_name">First Name</label>
               <input type="text" id="first_name" name="first_name" onChange={inputChange} value={student.first_name} />
             </div>
-
-            <div className="form-group full">
+            <div className="form-group">
               <label htmlFor="middle_name">Middle Name</label>
               <input
                 type="text"
@@ -51,11 +49,14 @@ export default function Screen() {
                 value={student.middle_name}
               />
             </div>
-
-            <p>When you click on Submit, this will start the exam. Make sure you are ready</p>
-            <button type="button" onClick={submitInfo}>
-              Submit
-            </button>
+            <div className="form-group">
+              <p>When you click on Submit, this will start the exam. Make sure you are ready</p>
+            </div>
+            <div className="form-group">
+              <button type="button" onClick={submitInfo}>
+                Submit
+              </button>
+            </div>
           </form>
         </div>
       )}
