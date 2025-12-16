@@ -64,7 +64,7 @@ export default function Screen() {
         <div className="frame-holder">
           <iframe
             src="https://docs.google.com/forms/d/e/1FAIpQLSeCY_rkVMtqUn48CuTMwoIiaCXGsDT-eK0nPY1Drv6yFlQ2ZQ/viewform?embedded=true"
-            width="90%"
+            width="98%"
             height="768"
           >
             Loading…
