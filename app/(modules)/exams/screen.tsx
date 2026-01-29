@@ -1,7 +1,7 @@
 "use client";
 
 import { sendResponse, usePageVisibility, useWindowFocus } from "@/app/(modules)/exams/hooks";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 export default function Screen() {
   const [student, setStudent] = useState({
@@ -15,9 +15,32 @@ export default function Screen() {
 
   const [submitted, setSubmitted] = useState(false);
 
+  // ✅ 45 minutes = 2700 seconds
+  const [timeLeft, setTimeLeft] = useState(45 * 60);
+
+  // ✅ COUNTDOWN EFFECT
+  useEffect(() => {
+    if (!submitted) return;
+    if (timeLeft <= 0) {
+      sendResponse(student, "Time expired");
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setTimeLeft((t) => t - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [submitted, timeLeft, student]);
+
+  const formatTime = (total: number) => {
+    const mins = Math.floor(total / 60);
+    const secs = total % 60;
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
+
   const inputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { target } = event;
-
     setStudent((s) => ({ ...s, [target.name]: target.value }));
   };
 
@@ -26,46 +49,81 @@ export default function Screen() {
     setSubmitted(true);
   };
 
+  const isWarning = timeLeft <= 5 * 60;
+
   return (
     <div className="screen-holder">
       {!submitted && (
         <div className="form-holder">
           <form>
             <div className="form-group">
-              <label htmlFor="last_name">Last Name</label>
-              <input type="text" id="last_name" name="last_name" onChange={inputChange} value={student.last_name} />
+              <label>Last Name</label>
+              <input name="last_name" onChange={inputChange} value={student.last_name} />
             </div>
+
             <div className="form-group">
-              <label htmlFor="first_name">First Name</label>
-              <input type="text" id="first_name" name="first_name" onChange={inputChange} value={student.first_name} />
+              <label>First Name</label>
+              <input name="first_name" onChange={inputChange} value={student.first_name} />
             </div>
+
             <div className="form-group">
-              <label htmlFor="middle_name">Middle Name</label>
-              <input
-                type="text"
-                id="middle_name"
-                name="middle_name"
-                onChange={inputChange}
-                value={student.middle_name}
-              />
+              <label>Middle Name</label>
+              <input name="middle_name" onChange={inputChange} value={student.middle_name} />
             </div>
+
             <div className="form-group">
-              <p>When you click on Submit, this will start the exam. Make sure you are ready</p>
+              <p>When you click Submit, the 45-minute exam timer will start.</p>
             </div>
-            <div className="form-group">
-              <button type="button" onClick={submitInfo}>
-                Submit
-              </button>
-            </div>
+
+            <button type="button" onClick={submitInfo}>
+              Submit
+            </button>
           </form>
         </div>
       )}
 
       {submitted && (
         <div className="frame-holder">
+          {/* ✅ COUNTDOWN DISPLAY */}
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "36px",
+              background: isWarning ? "#7a0000" : "#111",
+              color: "#fff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "14px",
+              fontWeight: "bold",
+              zIndex: 9999,
+            }}
+          >
+            ⏱ {formatTime(timeLeft)}
+          </div>
+
+          {/* ✅ OPTIONAL: show expired overlay */}
+          {timeLeft <= 0 && (
+            <div
+              style={{
+                padding: 20,
+                textAlign: "center",
+                fontSize: 24,
+                fontWeight: "bold",
+                color: "red",
+              }}
+            >
+              Time is up.
+            </div>
+          )}
+
           <iframe
-            src="https://docs.google.com/forms/d/e/1FAIpQLSeCY_rkVMtqUn48CuTMwoIiaCXGsDT-eK0nPY1Drv6yFlQ2ZQ/viewform?embedded=true"
+            src="https://docs.google.com/forms/d/e/1FAIpQLSc3P8lsFkwinbleNk5edJgvg4cHmhpAsNiuCh1_SXdFvxaUrQ/viewform?embedded=true"
             width="98%"
+            height="900"
           >
             Loading…
           </iframe>
