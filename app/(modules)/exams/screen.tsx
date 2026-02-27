@@ -119,9 +119,8 @@ export default function Screen() {
               Time is up.
             </div>
           )}
-
           <iframe
-            src="https://docs.google.com/forms/d/e/1FAIpQLSc3P8lsFkwinbleNk5edJgvg4cHmhpAsNiuCh1_SXdFvxaUrQ/viewform?embedded=true"
+            src="https://docs.google.com/forms/d/e/1FAIpQLSdQQQcrTfRtDI3fIzVzzLU1RY83ABOlogNbRBdI7TVP8soLaw/viewform?embedded=true"
             width="98%"
             height="900"
           >
